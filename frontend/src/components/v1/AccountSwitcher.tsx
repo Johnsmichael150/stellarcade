@@ -283,13 +283,18 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
                 Recent accounts
               </p>
               {recentOthers.map((account) => (
-                <button
+                <div
                   key={account.address}
-                  type="button"
                   role="menuitem"
                   className="account-switcher__item"
                   tabIndex={-1}
                   onClick={() => handleSelect(account)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelect(account);
+                    }
+                  }}
                   data-testid={`${testId}-recent-${account.address}`}
                   aria-label={`Switch to ${account.label ?? account.address}`}
                 >
@@ -319,7 +324,7 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
                   >
                     ✕
                   </button>
-                </button>
+                </div>
               ))}
             </>
           )}

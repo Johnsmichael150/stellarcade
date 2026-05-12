@@ -2,9 +2,9 @@
  * @jest-environment happy-dom
  */
 
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 import { QueueHealthWidget, type QueueMetrics } from '@/components/v1/QueueHealthWidget';
 
 const mockMetrics: QueueMetrics = {
@@ -18,13 +18,13 @@ const mockMetrics: QueueMetrics = {
 
 describe('QueueHealthWidget', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2024-01-15T10:35:00Z')); // 5 minutes after lastUpdated
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-15T10:35:00Z')); // 5 minutes after lastUpdated
   });
 
   afterEach(() => {
-    jest.useRealTimers();
-    jest.clearAllMocks();
+    vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   describe('Primary Success Path', () => {
@@ -61,7 +61,7 @@ describe('QueueHealthWidget', () => {
     });
 
     it('handles refresh functionality', () => {
-      const mockOnRefresh = jest.fn();
+      const mockOnRefresh = vi.fn();
       render(
         <QueueHealthWidget 
           metrics={mockMetrics} 
@@ -77,7 +77,7 @@ describe('QueueHealthWidget', () => {
 
   describe('Auto-refresh Functionality', () => {
     it('auto-refreshes at specified interval', async () => {
-      const mockOnRefresh = jest.fn();
+      const mockOnRefresh = vi.fn();
       render(
         <QueueHealthWidget 
           metrics={mockMetrics} 
@@ -90,7 +90,9 @@ describe('QueueHealthWidget', () => {
       expect(screen.getByText(/Next update in \d+s/)).toBeInTheDocument();
       
       // Fast-forward 5 seconds
-      jest.advanceTimersByTime(5000);
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
       
       await waitFor(() => {
         expect(mockOnRefresh).toHaveBeenCalledTimes(1);
@@ -111,7 +113,7 @@ describe('QueueHealthWidget', () => {
     });
 
     it('resets countdown on manual refresh', () => {
-      const mockOnRefresh = jest.fn();
+      const mockOnRefresh = vi.fn();
       render(
         <QueueHealthWidget 
           metrics={mockMetrics} 
@@ -121,7 +123,9 @@ describe('QueueHealthWidget', () => {
       );
       
       // Advance time partially
-      jest.advanceTimersByTime(3000);
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
       
       // Manual refresh
       fireEvent.click(screen.getByTestId('queue-health-widget-refresh'));
@@ -148,7 +152,7 @@ describe('QueueHealthWidget', () => {
     });
 
     it('handles retry from error state', () => {
-      const mockOnRefresh = jest.fn();
+      const mockOnRefresh = vi.fn();
       render(
         <QueueHealthWidget 
           error="Network error" 

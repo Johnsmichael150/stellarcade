@@ -209,7 +209,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({
         description="Collectibles from events and drops will appear here once you mint, earn, or purchase them."
         actions={[
           {
-            label: "Browse collectibles",
+            label: "Explore collectibles",
             onClick: onBrowseCollectibles ?? (() => {}),
             variant: "primary",
           },

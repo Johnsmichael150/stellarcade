@@ -59,6 +59,14 @@ export interface UseWalletStatusReturn {
   refresh: () => Promise<void>;
 }
 
+const DEFAULT_REFRESH_STATE: WalletSessionRefreshState = {
+  phase: WalletSessionRefreshPhase.IDLE,
+  trigger: "manual",
+  attempt: 0,
+  maxAttempts: 1,
+  terminal: false,
+};
+
 function deriveStatus(
   sessionState: WalletSessionState,
   error: Error | null,
@@ -134,13 +142,14 @@ export function useWalletStatus(
   );
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshState, setRefreshState] = useState<WalletSessionRefreshState>(
-    svcRef.current.getRefreshState(),
+    svcRef.current.getRefreshState?.() ?? DEFAULT_REFRESH_STATE,
   );
   const [sessionDropped, setSessionDropped] = useState(
-    svcRef.current.getSessionDropped(),
+    svcRef.current.getSessionDropped?.() ?? false,
   );
   const [lastReconnectAt, setLastReconnectAt] = useState<number | null>(
-    svcRef.current.getRefreshState().lastSucceededAt ?? null,
+    (svcRef.current.getRefreshState?.() ?? DEFAULT_REFRESH_STATE).lastSucceededAt ??
+      null,
   );
 
   useEffect(() => {

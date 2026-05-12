@@ -262,7 +262,7 @@ export function HoldingsBreakdownCard({
     >
       <header style={styles.header}>
         <h2 style={styles.cardTitle}>{title}</h2>
-        {!isLoading && !error && hasFiat && holdings.length > 0 && (
+        {!isLoading && !error && hasFiat && holdings.length > 1 && (
           <span
             style={styles.totalBadge}
             aria-label={`Total value ${formatUsd(totalUsd, currencySymbol)}`}

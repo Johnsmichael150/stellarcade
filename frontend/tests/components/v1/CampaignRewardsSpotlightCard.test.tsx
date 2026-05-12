@@ -11,9 +11,10 @@ describe("CampaignRewardsSpotlightCard", () => {
       />,
     );
 
-    expect(screen.getByTestId("campaign-rewards-spotlight")).toBeInTheDocument();
-    expect(screen.getByText(/4 running campaigns/i)).toBeInTheDocument();
-    expect(screen.getByText(/18 claims pending rewards/i)).toBeInTheDocument();
+    const card = screen.getByTestId("campaign-rewards-spotlight");
+    expect(card).toBeInTheDocument();
+    expect(card).toHaveTextContent(/4\s+running campaigns/i);
+    expect(card).toHaveTextContent(/18 claims\s+pending rewards/i);
   });
 
   it("handles empty campaign state", () => {

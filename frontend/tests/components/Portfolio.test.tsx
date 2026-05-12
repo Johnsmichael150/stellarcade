@@ -143,7 +143,7 @@ describe("Portfolio page", () => {
 
     fireEvent.click(screen.getByText("Open wallet tools"));
     fireEvent.click(screen.getByText("Browse reward paths"));
-    fireEvent.click(screen.getByText("Browse collectibles"));
+    fireEvent.click(screen.getByText("Explore collectibles"));
 
     expect(onOpenWallet).toHaveBeenCalledTimes(1);
     expect(onBrowseRewards).toHaveBeenCalledTimes(1);

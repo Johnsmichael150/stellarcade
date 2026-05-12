@@ -32,7 +32,7 @@ describe('CommandPalette', () => {
       expect(screen.getByTestId('command-palette')).toBeInTheDocument();
     });
 
-    fireEvent.keyDown(window, { key: 'Escape' });
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await waitFor(() => {
       expect(screen.queryByTestId('command-palette')).not.toBeInTheDocument();
     });
@@ -66,9 +66,11 @@ describe('CommandPalette', () => {
     const input = screen.getByTestId('command-palette-input');
     fireEvent.change(input, { target: { value: 'open' } });
 
-    fireEvent.keyDown(window, { key: 'Enter' });
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
     expect(commands[0].action).toHaveBeenCalled();
-    expect(screen.queryByTestId('command-palette')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('command-palette')).not.toBeInTheDocument();
+    });
   });
 });

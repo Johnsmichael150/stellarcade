@@ -177,7 +177,7 @@ export function CollapsibleSection({
         }}
         tabIndex={-1}
       >
-        {validation && (
+        {showInlineValidation && validation && (
           <span style={{ color: ICON_COLOR[validation.type] }}>
             {validation.text}
           </span>

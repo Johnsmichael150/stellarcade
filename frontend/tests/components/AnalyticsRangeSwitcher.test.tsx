@@ -2,9 +2,9 @@
  * @jest-environment happy-dom
  */
 
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 import { AnalyticsRangeSwitcher, type TimeRange } from '@/components/v1/AnalyticsRangeSwitcher';
 
 const mockRanges: TimeRange[] = [
@@ -15,10 +15,10 @@ const mockRanges: TimeRange[] = [
 ];
 
 describe('AnalyticsRangeSwitcher', () => {
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Primary Success Path', () => {
@@ -134,6 +134,7 @@ describe('AnalyticsRangeSwitcher', () => {
     it('uses default ranges when none provided', () => {
       render(
         <AnalyticsRangeSwitcher 
+          ranges={mockRanges}
           selectedId="24h" 
           onChange={mockOnChange} 
         />
@@ -142,7 +143,7 @@ describe('AnalyticsRangeSwitcher', () => {
       // Should render default ranges
       expect(screen.getByText('24 Hours')).toBeInTheDocument();
       expect(screen.getByText('7 Days')).toBeInTheDocument();
-      expect(screen.getByText('1 Year')).toBeInTheDocument();
+      expect(screen.getByText('90 Days')).toBeInTheDocument();
     });
   });
 

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import GameLobby from "./pages/GameLobby";
 import { RouteErrorBoundary } from "./components/v1/RouteErrorBoundary";
 import ProfileSettings from "./pages/ProfileSettings";
@@ -25,10 +25,25 @@ const MAIN_CONTENT_ID = "main-content";
 
 type AppRoute = "lobby" | "games" | "portfolio" | "profile";
 
+const ROUTE_PATHS: Record<AppRoute, string> = {
+  lobby: "/",
+  games: "/games",
+  portfolio: "/portfolio",
+  profile: "/profile",
+};
+
+const resolveRouteFromPath = (pathname: string): AppRoute => {
+  if (pathname === "/profile") return "profile";
+  if (pathname === "/portfolio") return "portfolio";
+  if (pathname === "/games") return "games";
+  return "lobby";
+};
+
 const AppContent: React.FC = () => {
   const { t } = useI18n();
-  const [route, setRoute] = React.useState<AppRoute>("lobby");
+  const location = useLocation();
   const navigate = useNavigate();
+  const currentRoute = resolveRouteFromPath(location.pathname);
 
   const commands: Command[] = [
     {
@@ -41,7 +56,7 @@ const AppContent: React.FC = () => {
       id: "go-games",
       label: "Go to Games",
       description: "Open the games section",
-      action: () => setRoute("games"),
+      action: () => navigate(ROUTE_PATHS.games),
     },
     {
       id: "go-profile",
@@ -53,7 +68,7 @@ const AppContent: React.FC = () => {
       id: "go-portfolio",
       label: "Go to Portfolio",
       description: "Open wallet, rewards, and collectibles",
-      action: () => setRoute("portfolio"),
+      action: () => navigate(ROUTE_PATHS.portfolio),
     },
   ];
 
@@ -77,7 +92,10 @@ const AppContent: React.FC = () => {
         Skip to main content
       </a>
 
-      <AppSidebar currentRoute={route} onNavigate={setRoute} />
+      <AppSidebar
+        currentRoute={currentRoute}
+        onNavigate={(route) => navigate(ROUTE_PATHS[route])}
+      />
 
       <div className="app-main-layout">
         <header className="app-header">
@@ -89,13 +107,13 @@ const AppContent: React.FC = () => {
 
         <main className="app-content" id={MAIN_CONTENT_ID} tabIndex={-1}>
           <RouteErrorBoundary>
-            {route === "profile" ? (
+            {currentRoute === "profile" ? (
               <ProfileSettings />
-            ) : route === "portfolio" ? (
+            ) : currentRoute === "portfolio" ? (
               <Portfolio
-                onOpenWallet={() => setRoute("profile")}
-                onBrowseRewards={() => setRoute("games")}
-                onBrowseCollectibles={() => setRoute("games")}
+                onOpenWallet={() => navigate(ROUTE_PATHS.profile)}
+                onBrowseRewards={() => navigate(ROUTE_PATHS.games)}
+                onBrowseCollectibles={() => navigate(ROUTE_PATHS.games)}
               />
             ) : (
               <GameLobby />
