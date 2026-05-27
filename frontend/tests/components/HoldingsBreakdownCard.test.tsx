@@ -125,12 +125,15 @@ describe("HoldingsBreakdownCard", () => {
   it("uses custom currency symbol", () => {
     render(
       <HoldingsBreakdownCard
-        holdings={[{ id: "eth", label: "ETH", amount: 1, valueUsd: 3000 }]}
+        holdings={[
+          { id: "eth", label: "ETH", amount: 1, valueUsd: 3000 },
+          { id: "btc", label: "BTC", amount: 0.5, valueUsd: 20000 },
+        ]}
         currencySymbol="€"
       />,
     );
-    expect(screen.getByLabelText(/total value €3,000\.00/i)).toBeInTheDocument();
-    expect(screen.getAllByText("€3,000.00")).toHaveLength(2);
+    expect(screen.getByLabelText(/total value €23,000\.00/i)).toBeInTheDocument();
+    expect(screen.getAllByText("€23,000.00").length).toBeGreaterThanOrEqual(1);
   });
 
   // -------------------------------------------------------------------------

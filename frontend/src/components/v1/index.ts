@@ -420,6 +420,35 @@ export {
 } from "./ContentShell";
 export type { ContentShellProps } from "./ContentShell";
 
+// Issues #717, #718, #719
+export {
+  DraftPresenceIndicator,
+  default as DraftPresenceIndicatorDefault,
+} from "./DraftPresenceIndicator";
+export type {
+  DraftPresenceIndicatorProps,
+  DraftPresenceStatus,
+} from "./DraftPresenceIndicator";
+
+export {
+  RelatedWalletQuickLinks,
+  default as RelatedWalletQuickLinksDefault,
+} from "./RelatedWalletQuickLinks";
+export type {
+  RelatedWalletQuickLinksProps,
+  RelatedWallet,
+  WalletRelationship,
+} from "./RelatedWalletQuickLinks";
+
+export {
+  AlertStackRegion,
+  default as AlertStackRegionDefault,
+} from "./AlertStackRegion";
+export type {
+  AlertStackRegionProps,
+  AlertItem,
+  AlertAction,
+} from "./AlertStackRegion";
 export {
   InlineAlertCluster,
   default as InlineAlertClusterDefault,

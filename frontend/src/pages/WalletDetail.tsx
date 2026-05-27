@@ -4,6 +4,7 @@ import { PinnedWalletActionTray } from '../components/v1/PinnedWalletActionTray'
 import { ResumeTaskBanner } from '../components/v1/ResumeTaskBanner';
 import { StatusPill } from '../components/v1/StatusPill';
 import { WalletBalanceDeltaCards } from '../components/v1/WalletBalanceDeltaCards';
+import { RelatedWalletQuickLinks, type RelatedWallet } from '../components/v1/RelatedWalletQuickLinks';
 import GlobalStateStore from '../services/global-state-store';
 import { useWalletStatus } from '../hooks/v1/useWalletStatus';
 import type { PendingTransactionSnapshot } from '../types/global-state';
@@ -22,6 +23,13 @@ function formatPendingTaskLabel(snapshot: PendingTransactionSnapshot | null): st
 
 const WalletDetail: React.FC<WalletDetailProps> = ({ walletId = 'wallet_123' }) => {
   const [activeSection, setActiveSection] = useState<string>('overview');
+  const [activeRelatedWallet, setActiveRelatedWallet] = useState<string | undefined>();
+
+  const relatedWallets: RelatedWallet[] = [
+    { id: 'rw-1', address: 'GCKFBEIYTKP7GNCZXMWWKMPOH4KRPVZRAYCVMHZOOQBK4IDZKH4PGWNC', label: 'Sponsor Wallet', relationship: 'sponsor', txCount: 8, href: '/wallet/sponsor' },
+    { id: 'rw-2', address: 'GBXGBIMP4HKDQDNPQMCKNDRKIHR3OGNQJCFHYHROG4THA7HRVPZPGWNC', label: 'Multisig Peer', relationship: 'multisig-member', txCount: 3 },
+    { id: 'rw-3', address: 'GCJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEF', relationship: 'counterparty', txCount: 1 },
+  ];
   const [pendingTransaction, setPendingTransaction] = useState<PendingTransactionSnapshot | null>(null);
   const [showPendingTaskBanner, setShowPendingTaskBanner] = useState(false);
   const walletStatus = useWalletStatus();
@@ -196,6 +204,19 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ walletId = 'wallet_123' }) 
       </section>
 
       <section aria-label="Wallet detail content">{renderContent()}</section>
+
+      <section aria-label="Related wallets" style={{ marginTop: '1.5rem' }}>
+        <h2 style={{ marginBottom: '0.75rem', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Related Wallets
+        </h2>
+        <RelatedWalletQuickLinks
+          wallets={relatedWallets}
+          activeWalletId={activeRelatedWallet}
+          onSelect={setActiveRelatedWallet}
+          layout="horizontal"
+          testId="wallet-detail-related-wallets"
+        />
+      </section>
 
       <div style={{ marginTop: '1.5rem' }}>
         <PinnedWalletActionTray

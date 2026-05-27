@@ -1,4 +1,4 @@
-import { ReactNode, useState, useId, useCallback } from "react";
+import { useState, useId, useCallback } from "react";
 import { MetadataField, MetadataSectionProps } from "./types";
 import "./MetadataSection.css";
 
@@ -112,7 +112,7 @@ interface MetadataFieldComponentProps {
 
 function MetadataFieldComponent({
   field,
-  isDisabled = false,
+  isDisabled: _isDisabled = false,
   onInteraction,
 }: MetadataFieldComponentProps) {
   const fieldId = useId();

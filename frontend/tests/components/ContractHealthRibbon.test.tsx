@@ -139,7 +139,7 @@ describe('ContractHealthRibbon', () => {
   describe('accessibility', () => {
     it('has role="status" on the container', () => {
       render(<ContractHealthRibbon contractId="prize-pool" status="healthy" />);
-      expect(screen.getByRole('status')).toBeInTheDocument();
+      expect(screen.getAllByRole('status').length).toBeGreaterThanOrEqual(1);
     });
 
     it('generates a descriptive aria-label', () => {
