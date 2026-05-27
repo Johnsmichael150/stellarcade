@@ -4,6 +4,7 @@ resolver = "2"
 members = [
     "access-control",
     "arena-sessions",
+    "asset-escrow-v3",
     "bonus-rotator",
     "anti-cheat-bounties",
     "bounty-escrow",
@@ -54,6 +55,7 @@ members = [
     "gas-optimization-analysis",
     "governance",
     "governance-token",
+    "guild-progress",
     "guild-season",
     "affiliate-ledger",
     "daily-challenges",
@@ -77,6 +79,7 @@ members = [
     "reward-distribution",
     "reward-router",
     "reward-stream",
+    "reward-unlocker",
     "reward-vesting",
     "season-pass",
     "season-rewards-vault",
