@@ -90,6 +90,7 @@ members = [
     "jackpot-pool",
     "staking",
     "ticket-market",
+    "ticket-redeemer",
     "staking-rewards",
     "streak-bonus",
     "streak-ladder",

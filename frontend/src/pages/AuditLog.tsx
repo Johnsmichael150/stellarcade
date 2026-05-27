@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { AuditSnapshotCard, type AuditSnapshot } from '../components/v1/AuditSnapshotCard';
 import { AnalyticsRangeSwitcher, type TimeRange } from '../components/v1/AnalyticsRangeSwitcher';
+import { AlertStackRegion, type AlertItem } from '../components/v1/AlertStackRegion';
 
 const AuditLog: React.FC = () => {
   const [selectedRange, setSelectedRange] = useState<string>('24h');
@@ -141,6 +142,11 @@ const AuditLog: React.FC = () => {
 
   const auditData = generateAuditData(selectedRange);
 
+  const [auditAlerts, setAuditAlerts] = useState<AlertItem[]>([
+    { id: 'aa-1', severity: 'warning', title: 'Suspicious Activity', message: 'Multiple failed login attempts detected from IP 198.51.100.42.', source: 'Security Monitor' },
+    { id: 'aa-2', severity: 'info', title: 'Scheduled Maintenance', message: 'System maintenance window tonight at 2:00 AM UTC.', source: 'Operations' },
+  ]);
+
   const handleRangeChange = (rangeId: string) => {
     setSelectedRange(rangeId);
   };
@@ -158,6 +164,14 @@ const AuditLog: React.FC = () => {
           Monitor system activities, user actions, and security events
         </p>
       </header>
+
+      <section aria-label="Audit alerts" style={{ marginBottom: '1.5rem' }}>
+        <AlertStackRegion
+          alerts={auditAlerts}
+          onDismiss={(id) => setAuditAlerts((prev) => prev.filter((a) => a.id !== id))}
+          testId="audit-log-alerts"
+        />
+      </section>
 
       <section aria-labelledby="audit-recent-activity-heading" style={{ 
         display: 'flex', 

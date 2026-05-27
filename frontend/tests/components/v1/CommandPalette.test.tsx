@@ -32,8 +32,8 @@ describe('CommandPalette', () => {
       expect(screen.getByTestId('command-palette')).toBeInTheDocument();
     });
 
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await waitFor(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(screen.queryByTestId('command-palette')).not.toBeInTheDocument();
     });
   });
