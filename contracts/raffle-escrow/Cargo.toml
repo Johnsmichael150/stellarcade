@@ -1,0 +1,10 @@
+[package]
+name = "raffle-escrow"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+soroban-sdk = "20.0.0"
+
+[features]
+testutils = ["soroban-sdk/testutils"]
