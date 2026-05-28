@@ -87,3 +87,21 @@ pub fn demotion_risk(env: Env, user: Address) -> DemotionRisk
 
 `DemotionRisk`
 
+### `player_bucket_summary`
+Return a joined player and bucket snapshot as a stable read model. Before `init` this returns `configured = false` and `state = NotConfigured`. Unknown players return `state = MissingPlayer` with zeroed bucket fields. Missing referenced buckets return `state = MissingBucket` while preserving player data. Paused buckets return `state = Paused`.
+
+```rust
+pub fn player_bucket_summary(env: Env, user: Address) -> PlayerBucketSummary
+```
+
+#### Parameters
+
+| Name | Type |
+|------|------|
+| `env` | `Env` |
+| `user` | `Address` |
+
+#### Return Type
+
+`PlayerBucketSummary`
+

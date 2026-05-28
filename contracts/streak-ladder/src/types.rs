@@ -11,6 +11,16 @@ pub enum BucketState {
 
 #[contracttype]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum PlayerBucketState {
+    NotConfigured,
+    MissingPlayer,
+    MissingBucket,
+    Active,
+    Paused,
+}
+
+#[contracttype]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum DemotionRiskLevel {
     None,
     Low,
@@ -67,4 +77,20 @@ pub struct DemotionRisk {
     pub risk_level: DemotionRiskLevel,
     pub bucket_paused: bool,
     pub would_demote_now: bool,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct PlayerBucketSummary {
+    pub configured: bool,
+    pub player_found: bool,
+    pub bucket_found: bool,
+    pub state: PlayerBucketState,
+    pub bucket_id: u32,
+    pub current_streak: u32,
+    pub last_extended_at: u64,
+    pub min_streak: u32,
+    pub max_streak: u32,
+    pub demotion_window_secs: u64,
+    pub bucket_player_count: u32,
 }

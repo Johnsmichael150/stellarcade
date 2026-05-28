@@ -38,4 +38,13 @@ describe("NotificationCenter", () => {
       "toast-3",
     );
   });
+
+  it("renders a stable empty panel when showWhenEmpty is enabled", () => {
+    render(<NotificationCenter showWhenEmpty />);
+
+    expect(screen.getByTestId("notification-center")).toBeInTheDocument();
+    expect(screen.getByTestId("notification-center-empty-panel")).toHaveTextContent(
+      "No notifications yet",
+    );
+  });
 });

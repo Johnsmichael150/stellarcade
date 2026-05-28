@@ -10,6 +10,7 @@ export interface AsyncStateBoundaryProps<T, E = unknown> {
   renderIdle?: () => React.ReactNode;
   renderLoading?: () => React.ReactNode;
   renderEmpty?: () => React.ReactNode;
+  renderMissing?: () => React.ReactNode;
   renderError?: (params: { error: E | null | undefined; retry?: () => void | Promise<void> }) => React.ReactNode;
   renderSuccess: (data: T) => React.ReactNode;
   isEmpty?: (data: T) => boolean;
@@ -28,6 +29,7 @@ export function AsyncStateBoundary<T, E = unknown>({
   renderIdle,
   renderLoading,
   renderEmpty,
+  renderMissing,
   renderError,
   renderSuccess,
   isEmpty,
@@ -97,7 +99,11 @@ export function AsyncStateBoundary<T, E = unknown>({
     );
   }
 
-  if (data == null) {
+  if (typeof data === 'undefined') {
+    return <>{renderMissing?.() ?? <div data-testid={`${testId}-missing`}>Data is missing.</div>}</>;
+  }
+
+  if (data === null) {
     return <>{renderEmpty?.() ?? <div data-testid={`${testId}-empty`}>No data available.</div>}</>;
   }
 

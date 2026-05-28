@@ -42,6 +42,18 @@ describe('AsyncStateBoundary', () => {
     expect(screen.getByTestId('async-state-boundary-empty')).toBeInTheDocument();
   });
 
+  it('renders missing when success data is undefined', () => {
+    render(
+      <AsyncStateBoundary
+        status="success"
+        data={undefined}
+        renderSuccess={() => <div>ok</div>}
+      />,
+    );
+
+    expect(screen.getByTestId('async-state-boundary-missing')).toBeInTheDocument();
+  });
+
   it('renders success branch with data', () => {
     render(
       <AsyncStateBoundary

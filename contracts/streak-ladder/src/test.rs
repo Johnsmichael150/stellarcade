@@ -64,3 +64,37 @@ fn paused_bucket_and_missing_player_reads_are_predictable() {
     assert!(!missing.player_found);
     assert_eq!(missing.bucket_id, 0);
 }
+
+#[test]
+fn player_bucket_summary_covers_active_and_missing_states() {
+    let env = Env::default();
+    env.mock_all_auths();
+    let admin = Address::generate(&env);
+    let user = Address::generate(&env);
+    let contract_id = env.register(StreakLadder, ());
+    let client = StreakLadderClient::new(&env, &contract_id);
+
+    let pre_init = client.player_bucket_summary(&user);
+    assert!(!pre_init.configured);
+    assert_eq!(pre_init.state, PlayerBucketState::NotConfigured);
+    assert!(!pre_init.player_found);
+
+    client.init(&admin);
+    client.upsert_bucket(&admin, &5, &3, &9, &900, &false);
+    client.assign_player(&admin, &user, &5, &6, &1_100);
+
+    let active = client.player_bucket_summary(&user);
+    assert!(active.configured);
+    assert!(active.player_found);
+    assert!(active.bucket_found);
+    assert_eq!(active.state, PlayerBucketState::Active);
+    assert_eq!(active.bucket_id, 5);
+    assert_eq!(active.current_streak, 6);
+    assert_eq!(active.min_streak, 3);
+    assert_eq!(active.max_streak, 9);
+    assert_eq!(active.bucket_player_count, 1);
+
+    let missing_player = client.player_bucket_summary(&Address::generate(&env));
+    assert_eq!(missing_player.state, PlayerBucketState::MissingPlayer);
+    assert!(!missing_player.player_found);
+}

@@ -72,6 +72,10 @@ export interface NetworkGuardBannerProps {
    * @default false
    */
   isDroppedSession?: boolean;
+  /** Disable action buttons while still showing warning context. */
+  actionsDisabled?: boolean;
+  /** Optional explanation shown when actions are disabled. */
+  actionsDisabledReason?: string;
 }
 
 // ── Component ──────────────────────────────────────────────────────────────────
@@ -94,6 +98,8 @@ export const NetworkGuardBanner = React.memo(
     dismissalKey = "network-guard-banner",
     dismissalIdentity,
     isDroppedSession = false,
+    actionsDisabled = false,
+    actionsDisabledReason,
   }: NetworkGuardBannerProps) => {
     const [isDismissed, setIsDismissed] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -230,6 +236,11 @@ export const NetworkGuardBanner = React.memo(
                 Unsupported Network
               </h3>
               <p className="text-sm text-yellow-700 mt-1">{displayMessage}</p>
+              {actionsDisabled && actionsDisabledReason ? (
+                <p className="text-xs text-yellow-700 mt-2" data-testid="network-actions-disabled-reason">
+                  {actionsDisabledReason}
+                </p>
+              ) : null}
               {getQueuedNetworkActionsCount() > 0 && (
                 <p className="text-xs text-yellow-600 mt-2 font-medium">
                   {getQueuedNetworkActionsCount()} action(s) will resume
@@ -244,7 +255,7 @@ export const NetworkGuardBanner = React.memo(
             {onSwitchNetwork && (
               <button
                 onClick={handleSwitchNetwork}
-                disabled={isLoading}
+                disabled={isLoading || actionsDisabled}
                 className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-yellow-600 text-white hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 data-testid="network-switch-button"
                 aria-busy={isLoading}
@@ -282,7 +293,7 @@ export const NetworkGuardBanner = React.memo(
             {onRetryNetworkCheck && (
               <button
                 onClick={handleRetryNetworkCheck}
-                disabled={isLoading}
+                disabled={isLoading || actionsDisabled}
                 className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-white text-yellow-800 border border-yellow-300 hover:bg-yellow-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 data-testid="network-retry-button"
                 aria-busy={isLoading}
