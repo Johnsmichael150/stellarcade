@@ -5,6 +5,14 @@ import "./NotificationCenter.css";
 
 type NotificationView = "active" | "deferred" | "history";
 
+export interface NotificationCenterProps {
+  /**
+   * When true, render the panel even when there are no notifications so users
+   * still have a stable entry point and guidance text.
+   */
+  showWhenEmpty?: boolean;
+}
+
 const toneLabelMap = {
   success: "Success",
   info: "Info",
@@ -12,7 +20,9 @@ const toneLabelMap = {
   error: "Error",
 } as const;
 
-export function NotificationCenter(): React.JSX.Element | null {
+export function NotificationCenter({
+  showWhenEmpty = false,
+}: NotificationCenterProps): React.JSX.Element | null {
   const toasts = useErrorStore((state) => state.toasts);
   const deferredToasts = useErrorStore((state) => state.deferredToasts);
   const toastHistory = useErrorStore((state) => state.toastHistory);
@@ -39,7 +49,7 @@ export function NotificationCenter(): React.JSX.Element | null {
     }
   }, [deferredToasts.length, toastHistory.length, toasts.length, view]);
 
-  if (!hasContent) {
+  if (!hasContent && !showWhenEmpty) {
     return null;
   }
 
@@ -71,7 +81,14 @@ export function NotificationCenter(): React.JSX.Element | null {
           />
         </div>
 
-        {view === "active" ? (
+        {!hasContent ? (
+          <p className="toast-center__empty" data-testid="notification-center-empty-panel">
+            No notifications yet. New alerts, deferred items, and recent history will appear
+            here.
+          </p>
+        ) : null}
+
+        {view === "active" && hasContent ? (
           <>
             {toasts.length > 0 ? (
               <div className="toast-center__stack">
@@ -126,7 +143,7 @@ export function NotificationCenter(): React.JSX.Element | null {
           </>
         ) : null}
 
-        {view === "deferred" ? (
+        {view === "deferred" && hasContent ? (
           deferredToasts.length > 0 ? (
             <>
               <ul
@@ -158,7 +175,7 @@ export function NotificationCenter(): React.JSX.Element | null {
           )
         ) : null}
 
-        {view === "history" ? (
+        {view === "history" && hasContent ? (
           toastHistory.length > 0 ? (
             <>
               <ul

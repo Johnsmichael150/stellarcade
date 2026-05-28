@@ -7,7 +7,8 @@ mod types;
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
 pub use types::{
-    BucketConfig, BucketState, DemotionRisk, DemotionRiskLevel, PlayerRecord, StreakBucketSummary,
+    BucketConfig, BucketState, DemotionRisk, DemotionRiskLevel, PlayerBucketState,
+    PlayerBucketSummary, PlayerRecord, StreakBucketSummary,
 };
 
 #[contracttype]
@@ -228,6 +229,70 @@ impl StreakLadder {
             risk_level,
             bucket_paused: bucket.paused,
             would_demote_now,
+        }
+    }
+
+    /// Return a joined player+bucket snapshot for UI/API consumers.
+    ///
+    /// This read is side-effect free and returns predictable fallback values:
+    /// - before `init`: `configured = false`, `state = NotConfigured`
+    /// - unknown player: `player_found = false`, `state = MissingPlayer`
+    /// - dangling bucket reference: `bucket_found = false`, `state = MissingBucket`
+    /// - paused bucket: `state = Paused`
+    pub fn player_bucket_summary(env: Env, user: Address) -> PlayerBucketSummary {
+        let configured = is_configured(&env);
+        let Some(player) = storage::get_player(&env, &user) else {
+            return PlayerBucketSummary {
+                configured,
+                player_found: false,
+                bucket_found: false,
+                state: if configured {
+                    PlayerBucketState::MissingPlayer
+                } else {
+                    PlayerBucketState::NotConfigured
+                },
+                bucket_id: 0,
+                current_streak: 0,
+                last_extended_at: 0,
+                min_streak: 0,
+                max_streak: 0,
+                demotion_window_secs: 0,
+                bucket_player_count: 0,
+            };
+        };
+
+        let Some(bucket) = storage::get_bucket(&env, player.bucket_id) else {
+            return PlayerBucketSummary {
+                configured,
+                player_found: true,
+                bucket_found: false,
+                state: PlayerBucketState::MissingBucket,
+                bucket_id: player.bucket_id,
+                current_streak: player.current_streak,
+                last_extended_at: player.last_extended_at,
+                min_streak: 0,
+                max_streak: 0,
+                demotion_window_secs: 0,
+                bucket_player_count: 0,
+            };
+        };
+
+        PlayerBucketSummary {
+            configured,
+            player_found: true,
+            bucket_found: true,
+            state: if bucket.paused {
+                PlayerBucketState::Paused
+            } else {
+                PlayerBucketState::Active
+            },
+            bucket_id: bucket.bucket_id,
+            current_streak: player.current_streak,
+            last_extended_at: player.last_extended_at,
+            min_streak: bucket.min_streak,
+            max_streak: bucket.max_streak,
+            demotion_window_secs: bucket.demotion_window_secs,
+            bucket_player_count: bucket.player_count,
         }
     }
 }
