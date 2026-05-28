@@ -129,6 +129,7 @@ members = [
     "mission-pass",
     "arena-ladder",
     "clan-seasons",
+    "team-prizes",
 ]
 
 exclude = [

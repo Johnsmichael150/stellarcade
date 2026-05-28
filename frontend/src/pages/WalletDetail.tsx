@@ -7,6 +7,7 @@ import { StatusPill } from '../components/v1/StatusPill';
 import { StickyActionsFooter } from '../components/v1/StickyActionsFooter';
 import { WalletBalanceDeltaCards } from '../components/v1/WalletBalanceDeltaCards';
 import { RelatedWalletQuickLinks, type RelatedWallet } from '../components/v1/RelatedWalletQuickLinks';
+import RecentSurfaceShortcuts, { type RecentSurfaceShortcut } from '../components/v1/RecentSurfaceShortcuts';
 import GlobalStateStore from '../services/global-state-store';
 import { useWalletStatus } from '../hooks/v1/useWalletStatus';
 import type { PendingTransactionSnapshot } from '../types/global-state';
@@ -156,10 +157,24 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ walletId = 'wallet_123' }) 
             </StickyActionsFooter>
           </div>
         );
-      default:
+      default: {
+        // Recently visited wallet surfaces (#788). Source is a demo list
+        // for now; the real list comes from the global state store once the
+        // recent-surfaces feed lands.
+        const recentWalletShortcuts: RecentSurfaceShortcut[] = relatedWallets.map(rw => ({
+          id: rw.id,
+          label: rw.label ?? `${rw.address.slice(0, 6)}…${rw.address.slice(-4)}`,
+          hint: rw.relationship,
+          href: rw.href,
+        }));
         return (
           <div className="wallet-detail__content">
             <h2>Wallet Overview</h2>
+            <RecentSurfaceShortcuts
+              items={recentWalletShortcuts}
+              surfaceKind="wallet"
+              testId="wallet-recent-surface-shortcuts"
+            />
             <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
               <div style={{ padding: '1rem', border: '1px solid #333', borderRadius: '0.5rem' }}>
                 <h3>Balance</h3>
@@ -181,6 +196,7 @@ const WalletDetail: React.FC<WalletDetailProps> = ({ walletId = 'wallet_123' }) 
             </div>
           </div>
         );
+      }
     }
   };
 
