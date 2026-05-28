@@ -62,6 +62,10 @@ members = [
     "upgrade-mechanism",
     "vip-subscription",
     "wordle-clone",
+    "treasury-streams",
+    "sponsor-payouts",
+    "raffle-escrow",
+    "badge-ledger",
 ]
 
 exclude = [
