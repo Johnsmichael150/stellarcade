@@ -2376,6 +2376,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "stellarcade-ladder-checkpoints"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk 25.3.1",
+]
+
+[[package]]
 name = "stellarcade-ladder-seasons"
 version = "0.1.0"
 dependencies = [
@@ -2554,6 +2561,20 @@ dependencies = [
 
 [[package]]
 name = "stellarcade-random-generator"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk 25.3.1",
+]
+
+[[package]]
+name = "stellarcade-rank-rewards"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk 25.3.1",
+]
+
+[[package]]
+name = "stellarcade-referral-quests"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk 25.3.1",

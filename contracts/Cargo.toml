@@ -130,6 +130,9 @@ members = [
     "arena-ladder",
     "clan-seasons",
     "team-prizes",
+    "ladder-checkpoints",
+    "referral-quests",
+    "rank-rewards",
 ]
 
 exclude = [
