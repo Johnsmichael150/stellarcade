@@ -8,6 +8,7 @@ export interface GuidedAction {
   disabled?: boolean;
   isLoading?: boolean;
   testId?: string;
+  disabledReason?: string;
 }
 
 export interface GuidedActionFooterProps {
@@ -45,9 +46,16 @@ export function GuidedActionFooter({
               onClick={tertiaryAction.onClick}
               disabled={tertiaryAction.disabled || tertiaryAction.isLoading}
               data-testid={tertiaryAction.testId ?? `${testId}-tertiary-btn`}
+              aria-busy={tertiaryAction.isLoading}
+              aria-describedby={tertiaryAction.disabled && tertiaryAction.disabledReason ? `${testId}-tertiary-reason` : undefined}
             >
               {tertiaryAction.label}
             </button>
+          )}
+          {tertiaryAction?.disabled && tertiaryAction.disabledReason && (
+            <span id={`${testId}-tertiary-reason`} className="sr-only" role="status">
+              {tertiaryAction.disabledReason}
+            </span>
           )}
         </div>
 
@@ -59,9 +67,16 @@ export function GuidedActionFooter({
               onClick={secondaryAction.onClick}
               disabled={secondaryAction.disabled || secondaryAction.isLoading}
               data-testid={secondaryAction.testId ?? `${testId}-secondary-btn`}
+              aria-busy={secondaryAction.isLoading}
+              aria-describedby={secondaryAction.disabled && secondaryAction.disabledReason ? `${testId}-secondary-reason` : undefined}
             >
               {secondaryAction.label}
             </button>
+          )}
+          {secondaryAction?.disabled && secondaryAction.disabledReason && (
+            <span id={`${testId}-secondary-reason`} className="sr-only" role="status">
+              {secondaryAction.disabledReason}
+            </span>
           )}
           
           <button
@@ -72,12 +87,19 @@ export function GuidedActionFooter({
             onClick={primaryAction.onClick}
             disabled={primaryAction.disabled || primaryAction.isLoading}
             data-testid={primaryAction.testId ?? `${testId}-primary-btn`}
+            aria-busy={primaryAction.isLoading}
+            aria-describedby={primaryAction.disabled && primaryAction.disabledReason ? `${testId}-primary-reason` : undefined}
           >
             {primaryAction.isLoading ? (
               <span className="guided-action-footer__spinner" aria-hidden="true" />
             ) : null}
             <span className="guided-action-footer__btn-content">{primaryAction.label}</span>
           </button>
+          {primaryAction.disabled && primaryAction.disabledReason && (
+            <span id={`${testId}-primary-reason`} className="sr-only" role="status">
+              {primaryAction.disabledReason}
+            </span>
+          )}
         </div>
       </div>
     </StickyActionsFooter>
